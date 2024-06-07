@@ -277,6 +277,29 @@ Keyboard:onPressed(function(key)
                 filee:write(currentEditorText)
                 filee:close()
                 currentFile.text = "Editing File: " .. program_config.Info.File.name .. " ( Saved " .. os.date("%H:%M:%S") .. " )"
+                local fileDialog = ui.opendialog("Select File to Open")
+                if fileDialog then
+                  program_config.Info.Path = fileDialog.path
+                  program_config.Info.File = fileDialog
+                  program_config.Info.Text = io.open(fileDialog.path .. "/" .. fileDialog.name, "r"):read("*a")
+                  program_config.Info.EditorText =  io.open(fileDialog.path .. "/" .. fileDialog.name, "r"):read("*a")
+                  currentFile.text = "Editing File: " .. program_config.Info.File.name
+                  editor.text = program_config.Info.EditorText
+                  editor.caret = 0
+                  for entry in each(sys.Directory("syntax"):list("*.*")) do
+                    if type(entry) == "File" then
+                        local syntax_require = require("syntax."..entry.name:match("(.+)%..+$"))
+                        local filetype = syntax_require.filetype
+                        local keywords = syntax_require.keywords
+                        local currentFileFileType = program_config.Info.File.name:match("%.(%w+)$")
+                        if filetype == currentFileFileType then
+                            editor.keywords = keywords
+                        else
+                            editor.keywords = {}
+                        end
+                    end
+                  end
+                end
               end
             elseif ask == "no" then
               local fileDialog = ui.opendialog("Select File to Open")
