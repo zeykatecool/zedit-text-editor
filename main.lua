@@ -288,6 +288,19 @@ Keyboard:onPressed(function(key)
                 currentFile.text = "Editing File: " .. program_config.Info.File.name
                 editor.text = program_config.Info.EditorText
                 editor.caret = 0
+                for entry in each(sys.Directory("syntax"):list("*.*")) do
+                  if type(entry) == "File" then
+                      local syntax_require = require("syntax."..entry.name:match("(.+)%..+$"))
+                      local filetype = syntax_require.filetype
+                      local keywords = syntax_require.keywords
+                      local currentFileFileType = program_config.Info.File.name:match("%.(%w+)$")
+                      if filetype == currentFileFileType then
+                          editor.keywords = keywords
+                      else
+                          editor.keywords = {}
+                      end
+                  end
+              end
               else
                 currentFile.text = "Cannot access file | Still Editing File: " .. program_config.Info.File.name
               end
@@ -295,7 +308,6 @@ Keyboard:onPressed(function(key)
               return
               end
             else
-
               local fileDialog = ui.opendialog("Select File to Open")
               if fileDialog then
                 program_config.Info.Path = fileDialog.path
@@ -305,6 +317,19 @@ Keyboard:onPressed(function(key)
                 currentFile.text = "Editing File: " .. program_config.Info.File.name
                 editor.text = program_config.Info.EditorText
                 editor.caret = 0
+                for entry in each(sys.Directory("syntax"):list("*.*")) do
+                  if type(entry) == "File" then
+                      local syntax_require = require("syntax."..entry.name:match("(.+)%..+$"))
+                      local filetype = syntax_require.filetype
+                      local keywords = syntax_require.keywords
+                      local currentFileFileType = program_config.Info.File.name:match("%.(%w+)$")
+                      if filetype == currentFileFileType then
+                          editor.keywords = keywords
+                      else
+                          editor.keywords = {}
+                      end
+                  end
+              end
               else
                 currentFile.text = "Cannot access file | Still Editing File: " .. program_config.Info.File.name
               end
