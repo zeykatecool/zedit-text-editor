@@ -264,6 +264,54 @@ Keyboard:onPressed(function(key)
         end
       end
     end
+    if key == "T" then
+      if Keyboard:isPressing("CTRL") then
+        if program_config.Status == "Editor" then
+          local currentEditorText = program_config.Info.EditorText
+          local currentFileText = program_config.Info.Text
+          if currentEditorText ~= currentFileText then
+            local ask = ui.confirm("Do you want to save changes to file?")
+            if ask == "yes" then
+              local filee = io.open(program_config.Info.Path .. "/" .. program_config.Info.File.name, "w")
+              if filee then
+                filee:write(currentEditorText)
+                filee:close()
+                currentFile.text = "Editing File: " .. program_config.Info.File.name .. " ( Saved " .. os.date("%H:%M:%S") .. " )"
+              end
+            elseif ask == "no" then
+              local fileDialog = ui.opendialog("Select File to Open")
+              if fileDialog then
+                program_config.Info.Path = fileDialog.path
+                program_config.Info.File = fileDialog
+                program_config.Info.Text = io.open(fileDialog.path .. "/" .. fileDialog.name, "r"):read("*a")
+                program_config.Info.EditorText =  io.open(fileDialog.path .. "/" .. fileDialog.name, "r"):read("*a")
+                currentFile.text = "Editing File: " .. program_config.Info.File.name
+                editor.text = program_config.Info.EditorText
+                editor.caret = 0
+              else
+                currentFile.text = "Cannot access file | Still Editing File: " .. program_config.Info.File.name
+              end
+              elseif ask == "cancel" then
+              return
+              end
+            else
+
+              local fileDialog = ui.opendialog("Select File to Open")
+              if fileDialog then
+                program_config.Info.Path = fileDialog.path
+                program_config.Info.File = fileDialog
+                program_config.Info.Text = io.open(fileDialog.path .. "/" .. fileDialog.name, "r"):read("*a")
+                program_config.Info.EditorText =  io.open(fileDialog.path .. "/" .. fileDialog.name, "r"):read("*a")
+                currentFile.text = "Editing File: " .. program_config.Info.File.name
+                editor.text = program_config.Info.EditorText
+                editor.caret = 0
+              else
+                currentFile.text = "Cannot access file | Still Editing File: " .. program_config.Info.File.name
+              end
+            end
+            end
+        end
+    end
   end)
 end
 
@@ -279,8 +327,8 @@ function openFileButtonHoverPNG:onClick()
     program_config.Info = {
       File = file,
       Path = file.path,
-      Text = file.text,
-      EditorText = file.text
+      Text = io.open(file.path.."/"..file.name, "r"):read("*a"),
+      EditorText =  io.open(file.path .. "/" .. file.name, "r"):read("*a")
     }
     openEDITOR(file)
   else
