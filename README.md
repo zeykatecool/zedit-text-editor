@@ -8,3 +8,5 @@ Basic text editor made with LuaRT.
 - Added [syntax](https://github.com/zeykatecool/zedit-text-editor/tree/main/syntax) file and syntax standart-table.
 * Editor support syntax highlightning now.
 * You can add your own syntax standart-table,its easy to undestand.
+# Next Update
+- Will add settings.
