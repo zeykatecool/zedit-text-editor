@@ -314,7 +314,7 @@ local function openEDITOR(fileordir)
           if program_config.Status == "Editor" then
             if key == "CTRL" then
               if Keyboard:isPressing("S") then
-                io.open(f, "w"):write(mainEditor.text):close()
+                io.open(file.path.."/"..filename, "w"):write(mainEditor.text):close()
                 statusLabel.text = "Saved File: "..filename
               end
             end
