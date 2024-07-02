@@ -172,6 +172,9 @@ function SyntaxEdit:constructor(...)
     self.selection.fgcolor = 0xFFFFFF
     
     local text = self.text:gsub("\r\n", "\n")
+    if not self.keywords then
+      self.keywords = {}
+    end
    for k,v in pairs(self.keywords) do
     local start = 1
     while start < string.len(text) do
